@@ -1,6 +1,11 @@
 import Users from "../models/userModel.js";
+import { MockUsers } from "../models/dbFallback.js";
+import mongoose from "mongoose";
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken";
+
+// Helper to use local JSON DB if MongoDB is down
+const getDB = () => mongoose.connection.readyState === 1 ? Users : MockUsers;
 
 
 // Register User
@@ -12,7 +17,7 @@ export const registerUser = async (req, res) => {
             return res.status(400).json({ errorMessage: "Please fill all the fields" });
         }
 
-        const existingUser = await Users.findOne({ email });
+        const existingUser = await getDB().findOne({ email });
         if(existingUser){
             return res.status(400).json({ errorMessage: "User already exists" });
         }
@@ -20,7 +25,7 @@ export const registerUser = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const user = await Users.create({ name, email, password: hashedPassword });
+        const user = await getDB().create({ name, email, password: hashedPassword });
         res.status(200).json({ message: "User registered successfully", userId: user._id });
     }
     catch(error){
@@ -33,7 +38,7 @@ export const loginUser = async (req, res) => {
     try{
         const { email, password } = req.body;
 
-        const user = await Users.findOne({ email }).select("+password");
+        const user = await getDB().findOne({ email }).select("+password");
         if(!user){
             return res.status(400).json({ errorMessage: "Invalid credentials" });
         }
@@ -65,7 +70,7 @@ export const updateProfile = async (req, res) => {
         // Prevent password update through this route
         const { password, ...updateData } = req.body;
 
-        const updatedUser = await Users.findByIdAndUpdate(
+        const updatedUser = await getDB().findByIdAndUpdate(
             req.user._id,
             { $set: updateData },
             { new: true }
@@ -82,7 +87,7 @@ export const changePassword = async (req, res) => {
     try {
         const { currentPassword, newPassword } = req.body;
 
-        const user = await Users.findById(req.user._id).select("+password");
+        const user = await getDB().findById(req.user._id).select("+password");
         if (!user) {
             return res.status(404).json({ errorMessage: "User not found" });
         }
