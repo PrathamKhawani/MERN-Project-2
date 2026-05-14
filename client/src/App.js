@@ -13,16 +13,15 @@ function AuthProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem('token') || null);
   const [loading, setLoading] = useState(!!localStorage.getItem('token'));
 
-  const API = 'http://localhost:5000/api/users';
+  const API = '/api/users';
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    if (token) {
-      fetchMe(token);
-    }
-  }, []); // intentionally run once on mount
+  const logout = React.useCallback(() => {
+    localStorage.removeItem('token');
+    setToken(null);
+    setUser(null);
+  }, []);
 
-  async function fetchMe(t) {
+  const fetchMe = React.useCallback(async (t) => {
     try {
       const res = await fetch(`${API}/me`, {
         headers: { Authorization: `Bearer ${t}` }
@@ -35,9 +34,17 @@ function AuthProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }
+  }, [API, logout]);
 
-  async function login(email, password) {
+  useEffect(() => {
+    if (token) {
+      fetchMe(token);
+    } else {
+      setLoading(false);
+    }
+  }, [token, fetchMe]);
+
+  const login = React.useCallback(async (email, password) => {
     const res = await fetch(`${API}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -48,9 +55,9 @@ function AuthProvider({ children }) {
     localStorage.setItem('token', data.token);
     setToken(data.token);
     await fetchMe(data.token);
-  }
+  }, [API, fetchMe]);
 
-  async function register(name, email, password) {
+  const register = React.useCallback(async (name, email, password) => {
     const res = await fetch(`${API}/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -59,9 +66,9 @@ function AuthProvider({ children }) {
     const data = await res.json();
     if (!res.ok) throw new Error(data.errorMessage || 'Registration failed');
     return data;
-  }
+  }, [API]);
 
-  async function updateProfile(updateData) {
+  const updateProfile = React.useCallback(async (updateData) => {
     const res = await fetch(`${API}/update`, {
       method: 'PUT',
       headers: { 
@@ -74,9 +81,9 @@ function AuthProvider({ children }) {
     if (!res.ok) throw new Error(data.errorMessage || 'Failed to update profile');
     setUser(data.user);
     return data;
-  }
+  }, [API, token]);
 
-  async function changePassword(currentPassword, newPassword) {
+  const changePassword = React.useCallback(async (currentPassword, newPassword) => {
     const res = await fetch(`${API}/change-password`, {
       method: 'PUT',
       headers: { 
@@ -88,13 +95,7 @@ function AuthProvider({ children }) {
     const data = await res.json();
     if (!res.ok) throw new Error(data.errorMessage || 'Failed to change password');
     return data;
-  }
-
-  function logout() {
-    localStorage.removeItem('token');
-    setToken(null);
-    setUser(null);
-  }
+  }, [API, token]);
 
   return (
     <AuthContext.Provider value={{ user, token, loading, login, register, logout, updateProfile, changePassword }}>
