@@ -3,7 +3,7 @@
 A professional, high-end MERN (MongoDB, Express.js, React, Node.js) stack application featuring a secure authentication system and an interactive user dashboard.
 
 ## 🌐 Live Demo
-[**https://mern-project-2.vercel.app**](https://mern-project-2.vercel.app)
+[**https://mern-project-2-gules.vercel.app**](https://mern-project-2-gules.vercel.app)
 
 ## 🚀 Features
 
