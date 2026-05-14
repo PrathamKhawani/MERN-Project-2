@@ -4,8 +4,14 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken";
 
-// Helper to use local JSON DB if MongoDB is down
-const getDB = () => mongoose.connection.readyState === 1 ? Users : MockUsers;
+// Helper to use local JSON DB if MongoDB is down (only for local development)
+const getDB = () => {
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL;
+    if (isProduction || mongoose.connection.readyState === 1) {
+        return Users;
+    }
+    return MockUsers;
+};
 
 
 // Register User
