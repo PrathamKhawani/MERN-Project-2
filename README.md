@@ -1,30 +1,33 @@
-# PackPal - MERN Stack Application
+# MERN Auth Dashboard
 
-PackPal is a comprehensive MERN (MongoDB, Express.js, React, Node.js) stack application designed for travel management and packing assistance.
+A professional, high-end MERN (MongoDB, Express.js, React, Node.js) stack application featuring a secure authentication system and an interactive user dashboard.
+
+## 🌐 Live Demo
+[**https://mern-project-2.vercel.app**](https://mern-project-2.vercel.app)
 
 ## 🚀 Features
 
-- **Authentication**: Secure user login and registration with JWT.
-- **Dashboard**: Interactive user dashboard for managing trips.
-- **Mission Brief**: Detailed trip overview and planning tools.
-- **Checklist**: Pre-populated and customizable packing checklists.
-- **Vault**: Secure storage for important documents.
-- **Responsive Design**: Optimized for mobile, tablet, and desktop.
-- **Dark/Light Mode**: Customizable theme settings.
+- **Advanced Authentication**: Secure login and registration with JWT (JSON Web Tokens) and Bcrypt hashing.
+- **Interactive Dashboard**: Modern, glassmorphic UI with real-time greetings and user stats.
+- **Profile Management**: Update personal information like full name and view account details.
+- **Security Settings**: Full password management including the ability to change current passwords securely.
+- **App Settings**: Customizable user experience with Dark/Light mode toggle and notification preferences.
+- **Responsive Design**: Fully optimized for mobile, tablet, and desktop viewing.
+- **Glassmorphic UI**: Premium aesthetics using smooth gradients and micro-animations.
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React, CSS (Vanilla), Lucide Icons
+- **Frontend**: React, Vanilla CSS, Lucide Icons
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB (Mongoose)
-- **Security**: JSON Web Tokens (JWT), Bcrypt.js
-- **Deployment**: Vercel (Frontend/Backend)
+- **Security**: JWT, Bcrypt.js
+- **Deployment**: Vercel
 
 ## 📦 Installation
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/<YOUR_USERNAME>/<REPO_NAME>.git
+   git clone https://github.com/PrathamKhawani/MERN-Project-2.git
    cd MERN-Project-2
    ```
 
@@ -45,7 +48,7 @@ PackPal is a comprehensive MERN (MongoDB, Express.js, React, Node.js) stack appl
 Create a `.env` file in the `server` directory and add the following:
 
 ```env
-MONGO_URI=your_mongodb_connection_string
+MONGO_URL=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
 PORT=5000
 ```
