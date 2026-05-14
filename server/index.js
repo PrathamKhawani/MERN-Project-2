@@ -7,7 +7,7 @@ import routes from './routes/userRoutes.js';
 // Initialize express app
 const app = express();
 // CORS middleware
-app.use(cors({origin: "http://localhost:3000"}));
+app.use(cors());
 // Middleware (to parse JSON and urlencoded data) (body-parser)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,10 +21,6 @@ const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/mern_db2';
 mongoose.connect(MONGO_URL)
 .then(() => {
     console.log('Connected to MongoDB')
-    // Start the server after successful DB connection
-    app.listen(PORT, () => {
-        console.log(`Server is running on Port: ${PORT}`);
-    });
 })
 .catch((error) => {
     console.error('Error connecting to MongoDB:', error);
@@ -32,3 +28,13 @@ mongoose.connect(MONGO_URL)
 
 // Routes
 app.use('/api/users', routes);
+
+// Export the app for Vercel
+export default app;
+
+// Only listen if running locally
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Server is running on Port: ${PORT}`);
+    });
+}
